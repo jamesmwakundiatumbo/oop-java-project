@@ -1,0 +1,9 @@
+/* Form screens */
+.text-field, .password-field {
+    -fx-pref-height: 32px;
+}
+
+.text-area {
+    -fx-pref-row-count: 4;
+    -fx-wrap-text: true;
+}

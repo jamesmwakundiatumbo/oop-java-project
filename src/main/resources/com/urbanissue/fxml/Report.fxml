@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.ReportController"
+     spacing="16" prefWidth="500" prefHeight="400">
+    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+    <Label text="Reports" styleClass="title-label"/>
+    <Label fx:id="statusReportLabel" wrapText="true"/>
+    <Label fx:id="priorityReportLabel" wrapText="true"/>
+    <Button fx:id="backButton" text="Back to dashboard" onAction="#handleBack" maxWidth="200"/>
+</VBox>

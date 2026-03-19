@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.IssueDetailController"
+     spacing="12" prefWidth="560" prefHeight="480">
+    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+    <Label fx:id="titleLabel" text="Issue details" styleClass="title-label"/>
+    <GridPane hgap="8" vgap="8">
+        <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <Label fx:id="statusLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Label text="Priority:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <Label fx:id="priorityLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <Label fx:id="locationLabel" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <Label fx:id="descriptionLabel" wrapText="true" maxWidth="400" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+    </GridPane>
+    <Separator/>
+    <Label text="Comments" styleClass="section-label"/>
+    <ListView fx:id="commentsList" prefHeight="120" VBox.vgrow="ALWAYS"/>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <TextField fx:id="commentField" promptText="Add a comment" prefWidth="280"/>
+        <Button fx:id="addCommentButton" text="Add comment" onAction="#handleAddComment"/>
+    </HBox>
+    <HBox spacing="8">
+        <Button fx:id="updateStatusButton" text="Update status" onAction="#handleUpdateStatus" visible="false"/>
+        <ComboBox fx:id="statusCombo" prefWidth="140" visible="false"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="backButton" text="Back" onAction="#handleBack"/>
+    </HBox>
+</VBox>

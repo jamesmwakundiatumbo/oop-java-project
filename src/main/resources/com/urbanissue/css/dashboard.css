@@ -1,0 +1,9 @@
+/* Dashboard-specific styles */
+.welcome-label {
+    -fx-font-size: 18px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
