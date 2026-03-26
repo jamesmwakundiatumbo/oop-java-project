@@ -43,6 +43,36 @@ public class CitizenDashboardController {
         priorityCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getPriority()));
         dateCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(
                 c.getValue().getDateReported() != null ? c.getValue().getDateReported().format(DateTimeFormatter.ISO_LOCAL_DATE) : ""));
+
+        // Setup custom cell renderers for badges
+        statusCol.setCellFactory(column -> new javafx.scene.control.TableCell<Issue, String>() {
+            @Override
+            protected void updateItem(String status, boolean empty) {
+                super.updateItem(status, empty);
+                if (empty || status == null) {
+                    setGraphic(null);
+                } else {
+                    javafx.scene.control.Label badge = new javafx.scene.control.Label(status);
+                    badge.getStyleClass().addAll("status-badge", "status-" + status.toLowerCase().replace("_", "-"));
+                    setGraphic(badge);
+                }
+            }
+        });
+
+        priorityCol.setCellFactory(column -> new javafx.scene.control.TableCell<Issue, String>() {
+            @Override
+            protected void updateItem(String priority, boolean empty) {
+                super.updateItem(priority, empty);
+                if (empty || priority == null) {
+                    setGraphic(null);
+                } else {
+                    javafx.scene.control.Label badge = new javafx.scene.control.Label(priority);
+                    badge.getStyleClass().addAll("priority-badge", "priority-" + priority.toLowerCase());
+                    setGraphic(badge);
+                }
+            }
+        });
+
         issuesTable.getSelectionModel().selectedItemProperty().addListener((o, old, sel) -> viewDetailButton.setDisable(sel == null));
         refreshMyIssues();
     }
@@ -81,9 +111,29 @@ public class CitizenDashboardController {
     @FXML
     private void handleReportIssue() throws IOException {
         Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+
+        // Preserve current window state
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        double currentX = stage.getX();
+        double currentY = stage.getY();
+        boolean isMaximized = stage.isMaximized();
+
         Parent root = FXMLLoader.load(Main.class.getResource("/com/urbanissue/fxml/IssueForm.fxml"));
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+        stage.setScene(scene);
         stage.setTitle("CivicTrack - Report Issue");
+
+        // Restore window state
+        if (isMaximized) {
+            stage.setMaximized(true);
+        } else {
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
+            stage.setX(currentX);
+            stage.setY(currentY);
+        }
     }
 
     @FXML
@@ -100,16 +150,56 @@ public class CitizenDashboardController {
         IssueDetailController ctrl = loader.getController();
         ctrl.setIssueId(sel.getIssueId());
         Stage stage = (Stage) welcomeLabel.getScene().getWindow();
-        stage.setScene(new Scene(root));
+
+        // Preserve current window state
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        double currentX = stage.getX();
+        double currentY = stage.getY();
+        boolean isMaximized = stage.isMaximized();
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+        stage.setScene(scene);
         stage.setTitle("CivicTrack - Issue #" + sel.getIssueId());
+
+        // Restore window state
+        if (isMaximized) {
+            stage.setMaximized(true);
+        } else {
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
+            stage.setX(currentX);
+            stage.setY(currentY);
+        }
     }
 
     @FXML
     private void handleLogout() throws IOException {
         authService.logout();
         Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+
+        // Preserve current window state
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        double currentX = stage.getX();
+        double currentY = stage.getY();
+        boolean isMaximized = stage.isMaximized();
+
         Parent root = FXMLLoader.load(Main.class.getResource("/com/urbanissue/fxml/Login.fxml"));
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+        stage.setScene(scene);
         stage.setTitle("CivicTrack - Login");
+
+        // Restore window state
+        if (isMaximized) {
+            stage.setMaximized(true);
+        } else {
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
+            stage.setX(currentX);
+            stage.setY(currentY);
+        }
     }
 }

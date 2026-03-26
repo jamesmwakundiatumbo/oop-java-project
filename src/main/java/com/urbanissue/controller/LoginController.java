@@ -52,9 +52,29 @@ public class LoginController {
     @FXML
     private void handleRegister() throws IOException {
         Stage stage = (Stage) emailField.getScene().getWindow();
+
+        // Preserve current window state
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        double currentX = stage.getX();
+        double currentY = stage.getY();
+        boolean isMaximized = stage.isMaximized();
+
         Parent root = FXMLLoader.load(Main.class.getResource("/com/urbanissue/fxml/Register.fxml"));
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+        stage.setScene(scene);
         stage.setTitle("CivicTrack - Register");
+
+        // Restore window state
+        if (isMaximized) {
+            stage.setMaximized(true);
+        } else {
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
+            stage.setX(currentX);
+            stage.setY(currentY);
+        }
     }
 
     private void showMessage(String msg) {
@@ -73,9 +93,29 @@ public class LoginController {
         };
         try {
             Stage stage = (Stage) emailField.getScene().getWindow();
+
+            // Preserve current window state
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            double currentX = stage.getX();
+            double currentY = stage.getY();
+            boolean isMaximized = stage.isMaximized();
+
             Parent root = FXMLLoader.load(Main.class.getResource(resource));
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+            stage.setScene(scene);
             stage.setTitle("CivicTrack - " + user.getDisplayRole());
+
+            // Restore window state
+            if (isMaximized) {
+                stage.setMaximized(true);
+            } else {
+                stage.setWidth(currentWidth);
+                stage.setHeight(currentHeight);
+                stage.setX(currentX);
+                stage.setY(currentY);
+            }
             stage.setResizable(true);
         } catch (IOException e) {
             AlertHelper.showError("Navigation error", e.getMessage());

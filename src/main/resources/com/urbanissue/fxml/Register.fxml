@@ -3,16 +3,31 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.RegisterController"
-     alignment="CENTER" spacing="12" styleClass="form-root"
-     prefWidth="400" prefHeight="420">
-    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
-    <Label text="Create Account" styleClass="title-label"/>
-    <TextField fx:id="nameField" promptText="Full name" maxWidth="280" prefHeight="32"/>
-    <TextField fx:id="emailField" promptText="Email" maxWidth="280" prefHeight="32"/>
-    <PasswordField fx:id="passwordField" promptText="Password" maxWidth="280" prefHeight="32"/>
-    <TextField fx:id="phoneField" promptText="Phone (optional)" maxWidth="280" prefHeight="32"/>
-    <ComboBox fx:id="roleCombo" promptText="Role" maxWidth="280" prefHeight="32"/>
-    <Button fx:id="registerButton" text="Register" onAction="#handleRegister" defaultButton="true" prefWidth="140"/>
-    <Button fx:id="backButton" text="Back to Login" onAction="#handleBack" prefWidth="140"/>
-    <Label fx:id="messageLabel" styleClass="message-label" wrapText="true" visible="false" managed="false"/>
+     alignment="CENTER" styleClass="login-container"
+     prefWidth="450" prefHeight="500">
+
+    <!-- Modern registration card -->
+    <VBox styleClass="login-card" spacing="24" maxWidth="400">
+        <VBox spacing="8" alignment="CENTER">
+            <Label text="Create Account" styleClass="title-label"/>
+            <Label text="Join CivicTrack today" styleClass="subtitle-label"/>
+        </VBox>
+
+        <VBox spacing="16" styleClass="form-container">
+            <TextField fx:id="nameField" promptText="Full name" prefHeight="44"/>
+            <TextField fx:id="emailField" promptText="Email address" prefHeight="44"/>
+            <PasswordField fx:id="passwordField" promptText="Password" prefHeight="44"/>
+            <TextField fx:id="phoneField" promptText="Phone number (optional)" prefHeight="44"/>
+            <ComboBox fx:id="roleCombo" promptText="Select your role" prefHeight="44"/>
+
+            <VBox spacing="12">
+                <Button fx:id="registerButton" text="Create Account" onAction="#handleRegister"
+                        defaultButton="true" styleClass="button-primary" prefHeight="44"/>
+                <Button fx:id="backButton" text="Back to Login" onAction="#handleBack"
+                        styleClass="button-secondary" prefHeight="44"/>
+            </VBox>
+
+            <Label fx:id="messageLabel" styleClass="error-message" wrapText="true" visible="false" managed="false"/>
+        </VBox>
+    </VBox>
 </VBox>

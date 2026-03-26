@@ -3,82 +3,109 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.AdminDashboardController"
-     spacing="16" prefWidth="800" prefHeight="600">
-    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
+     styleClass="main-container" spacing="0" prefWidth="900" prefHeight="700">
 
-    <HBox alignment="CENTER_LEFT" spacing="12">
+    <!-- Modern header bar -->
+    <HBox styleClass="header-bar" alignment="CENTER_LEFT" spacing="16">
         <Label fx:id="welcomeLabel" text="Admin Dashboard" styleClass="welcome-label"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout"/>
+        <Button fx:id="logoutButton" text="Sign Out" onAction="#handleLogout" styleClass="button-secondary"/>
     </HBox>
 
     <TabPane VBox.vgrow="ALWAYS">
         <Tab text="All Issues" closable="false">
-            <VBox spacing="8" style="-fx-padding: 10;">
-                <TableView fx:id="issuesTable" VBox.vgrow="ALWAYS" prefHeight="350">
+            <VBox styleClass="card" spacing="20" style="-fx-padding: 24;">
+                <Label text="Issue Management" styleClass="section-label"/>
+                <TableView fx:id="issuesTable" VBox.vgrow="ALWAYS" prefHeight="400">
                     <columns>
-                        <TableColumn fx:id="idCol" text="ID" prefWidth="50"/>
-                        <TableColumn fx:id="titleCol" text="Title" prefWidth="200"/>
-                        <TableColumn fx:id="categoryCol" text="Category" prefWidth="120"/>
-                        <TableColumn fx:id="statusCol" text="Status" prefWidth="100"/>
-                        <TableColumn fx:id="priorityCol" text="Priority" prefWidth="80"/>
-                        <TableColumn fx:id="reportedByCol" text="Reported By" prefWidth="150"/>
-                        <TableColumn fx:id="assignedCol" text="Assigned To" prefWidth="150"/>
+                        <TableColumn fx:id="idCol" text="ID" prefWidth="60"/>
+                        <TableColumn fx:id="titleCol" text="Title" prefWidth="220"/>
+                        <TableColumn fx:id="categoryCol" text="Category" prefWidth="130"/>
+                        <TableColumn fx:id="statusCol" text="Status" prefWidth="110"/>
+                        <TableColumn fx:id="priorityCol" text="Priority" prefWidth="90"/>
+                        <TableColumn fx:id="reportedByCol" text="Reported By" prefWidth="140"/>
+                        <TableColumn fx:id="assignedCol" text="Assigned To" prefWidth="140"/>
                     </columns>
                 </TableView>
-                <HBox spacing="8" alignment="CENTER_LEFT">
+                <HBox styleClass="action-bar" spacing="12" alignment="CENTER_LEFT">
                     <Button fx:id="viewDetailButton" text="View Details" onAction="#handleViewDetail" disable="true"/>
-                    <Button fx:id="assignIssueButton" text="Assign Issue" onAction="#handleAssignIssue" disable="true"/>
+                    <Button fx:id="assignIssueButton" text="Assign Issue" onAction="#handleAssignIssue"
+                            styleClass="button-secondary" disable="true"/>
                     <ComboBox fx:id="statusCombo" promptText="Change Status" prefWidth="140"/>
-                    <Button fx:id="updateStatusButton" text="Update Status" onAction="#handleUpdateStatus" disable="true"/>
+                    <Button fx:id="updateStatusButton" text="Update Status" onAction="#handleUpdateStatus"
+                            styleClass="button-secondary" disable="true"/>
                 </HBox>
             </VBox>
         </Tab>
 
         <Tab text="User Management" closable="false">
-            <VBox spacing="8" style="-fx-padding: 10;">
-                <TableView fx:id="usersTable" VBox.vgrow="ALWAYS" prefHeight="350">
+            <VBox styleClass="card" spacing="20" style="-fx-padding: 24;">
+                <Label text="User Management" styleClass="section-label"/>
+                <TableView fx:id="usersTable" VBox.vgrow="ALWAYS" prefHeight="400">
                     <columns>
-                        <TableColumn fx:id="userIdCol" text="ID" prefWidth="50"/>
+                        <TableColumn fx:id="userIdCol" text="ID" prefWidth="60"/>
                         <TableColumn fx:id="userNameCol" text="Name" prefWidth="200"/>
-                        <TableColumn fx:id="userEmailCol" text="Email" prefWidth="250"/>
-                        <TableColumn fx:id="userRoleCol" text="Role" prefWidth="100"/>
+                        <TableColumn fx:id="userEmailCol" text="Email" prefWidth="280"/>
+                        <TableColumn fx:id="userRoleCol" text="Role" prefWidth="120"/>
                     </columns>
                 </TableView>
-                <HBox spacing="8" alignment="CENTER_LEFT">
+                <HBox styleClass="action-bar" spacing="12" alignment="CENTER_LEFT">
                     <Button fx:id="addUserButton" text="Add User" onAction="#handleAddUser"/>
-                    <Button fx:id="editUserButton" text="Edit User" onAction="#handleEditUser" disable="true"/>
-                    <Button fx:id="deleteUserButton" text="Delete User" onAction="#handleDeleteUser" disable="true"/>
+                    <Button fx:id="editUserButton" text="Edit User" onAction="#handleEditUser"
+                            styleClass="button-secondary" disable="true"/>
+                    <Button fx:id="deleteUserButton" text="Delete User" onAction="#handleDeleteUser"
+                            styleClass="button-danger" disable="true"/>
                 </HBox>
             </VBox>
         </Tab>
 
         <Tab text="Statistics" closable="false">
-            <VBox spacing="16" style="-fx-padding: 10;">
-                <Label text="General Statistics" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-                <GridPane hgap="20" vgap="10">
-                    <Label text="Total Issues:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                    <Label fx:id="totalIssuesLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <VBox styleClass="card" spacing="24" style="-fx-padding: 24;">
 
-                    <Label text="Pending Issues:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                    <Label fx:id="pendingIssuesLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <!-- Dashboard Metrics Cards -->
+                <VBox spacing="16">
+                    <Label text="Dashboard Overview" styleClass="section-label"/>
+                    <HBox spacing="20" alignment="CENTER_LEFT">
+                        <!-- Total Issues Card -->
+                        <VBox styleClass="metric-card">
+                            <Label text="Total Issues" styleClass="metric-title"/>
+                            <Label fx:id="totalIssuesLabel" text="0" styleClass="metric-label"/>
+                        </VBox>
 
-                    <Label text="Resolved Issues:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                    <Label fx:id="resolvedIssuesLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <!-- Pending Issues Card -->
+                        <VBox styleClass="metric-card">
+                            <Label text="Pending Issues" styleClass="metric-title"/>
+                            <Label fx:id="pendingIssuesLabel" text="0" styleClass="metric-label"/>
+                        </VBox>
 
-                    <Label text="Total Users:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                    <Label fx:id="totalUsersLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                </GridPane>
+                        <!-- Resolved Issues Card -->
+                        <VBox styleClass="metric-card">
+                            <Label text="Resolved Issues" styleClass="metric-title"/>
+                            <Label fx:id="resolvedIssuesLabel" text="0" styleClass="metric-label"/>
+                        </VBox>
 
-                <Label text="Issues by Category" style="-fx-font-weight: bold; -fx-font-size: 14px;"/>
-                <TableView fx:id="categoryStatsTable" prefHeight="200" maxHeight="200">
-                    <columns>
-                        <TableColumn fx:id="categoryNameCol" text="Category" prefWidth="200"/>
-                        <TableColumn fx:id="categoryCountCol" text="Issues Count" prefWidth="100"/>
-                    </columns>
-                </TableView>
+                        <!-- Total Users Card -->
+                        <VBox styleClass="metric-card">
+                            <Label text="Total Users" styleClass="metric-title"/>
+                            <Label fx:id="totalUsersLabel" text="0" styleClass="metric-label"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
 
-                <Button fx:id="refreshStatsButton" text="Refresh Statistics" onAction="#handleRefreshStats"/>
+                <!-- Category Statistics -->
+                <VBox spacing="16">
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <Label text="Issues by Category" styleClass="section-label"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="refreshStatsButton" text="Refresh" onAction="#handleRefreshStats" styleClass="button-secondary"/>
+                    </HBox>
+                    <TableView fx:id="categoryStatsTable" prefHeight="250" maxHeight="300" styleClass="table-view">
+                        <columns>
+                            <TableColumn fx:id="categoryNameCol" text="Category" prefWidth="250"/>
+                            <TableColumn fx:id="categoryCountCol" text="Issues Count" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </VBox>
             </VBox>
         </Tab>
     </TabPane>

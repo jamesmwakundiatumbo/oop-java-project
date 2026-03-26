@@ -183,6 +183,7 @@ public class IssueDetailController {
             scrollPane.setFitToHeight(true);
 
             Scene imageScene = new Scene(scrollPane);
+            imageScene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
             imageStage.setScene(imageScene);
             imageStage.show();
         } catch (Exception e) {
@@ -222,8 +223,28 @@ public class IssueDetailController {
     @FXML
     private void handleBack() throws IOException {
         Stage stage = (Stage) backButton.getScene().getWindow();
+
+        // Preserve current window state
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        double currentX = stage.getX();
+        double currentY = stage.getY();
+        boolean isMaximized = stage.isMaximized();
+
         Parent root = FXMLLoader.load(Main.class.getResource(backFxml));
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+        stage.setScene(scene);
         stage.setTitle("CivicTrack");
+
+        // Restore window state
+        if (isMaximized) {
+            stage.setMaximized(true);
+        } else {
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
+            stage.setX(currentX);
+            stage.setY(currentY);
+        }
     }
 }

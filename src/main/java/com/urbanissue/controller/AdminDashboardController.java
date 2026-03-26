@@ -77,6 +77,35 @@ public class AdminDashboardController {
         reportedByCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(getUserName(c.getValue().getReportedBy())));
         assignedCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(getUserName(c.getValue().getAssignedOfficial())));
 
+        // Setup custom cell renderers for badges
+        statusCol.setCellFactory(column -> new javafx.scene.control.TableCell<Issue, String>() {
+            @Override
+            protected void updateItem(String status, boolean empty) {
+                super.updateItem(status, empty);
+                if (empty || status == null) {
+                    setGraphic(null);
+                } else {
+                    javafx.scene.control.Label badge = new javafx.scene.control.Label(status);
+                    badge.getStyleClass().addAll("status-badge", "status-" + status.toLowerCase().replace("_", "-"));
+                    setGraphic(badge);
+                }
+            }
+        });
+
+        priorityCol.setCellFactory(column -> new javafx.scene.control.TableCell<Issue, String>() {
+            @Override
+            protected void updateItem(String priority, boolean empty) {
+                super.updateItem(priority, empty);
+                if (empty || priority == null) {
+                    setGraphic(null);
+                } else {
+                    javafx.scene.control.Label badge = new javafx.scene.control.Label(priority);
+                    badge.getStyleClass().addAll("priority-badge", "priority-" + priority.toLowerCase());
+                    setGraphic(badge);
+                }
+            }
+        });
+
         // Setup users table
         if (usersTable != null) {
             userIdCol.setCellValueFactory(c -> new javafx.beans.property.SimpleIntegerProperty(c.getValue().getUserId()));
@@ -253,8 +282,28 @@ public class AdminDashboardController {
         // Set back navigation to admin dashboard
         ctrl.setBackFxml("/com/urbanissue/fxml/AdminDashboard.fxml");
         Stage stage = (Stage) welcomeLabel.getScene().getWindow();
-        stage.setScene(new Scene(root));
+
+        // Preserve current window state
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        double currentX = stage.getX();
+        double currentY = stage.getY();
+        boolean isMaximized = stage.isMaximized();
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+        stage.setScene(scene);
         stage.setTitle("CivicTrack - Issue #" + selected.getIssueId());
+
+        // Restore window state
+        if (isMaximized) {
+            stage.setMaximized(true);
+        } else {
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
+            stage.setX(currentX);
+            stage.setY(currentY);
+        }
     }
 
     @FXML
@@ -344,9 +393,29 @@ public class AdminDashboardController {
     private void handleLogout() throws IOException {
         authService.logout();
         Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+
+        // Preserve current window state
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        double currentX = stage.getX();
+        double currentY = stage.getY();
+        boolean isMaximized = stage.isMaximized();
+
         Parent root = FXMLLoader.load(Main.class.getResource("/com/urbanissue/fxml/Login.fxml"));
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+        stage.setScene(scene);
         stage.setTitle("CivicTrack - Login");
+
+        // Restore window state
+        if (isMaximized) {
+            stage.setMaximized(true);
+        } else {
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
+            stage.setX(currentX);
+            stage.setY(currentY);
+        }
     }
 
     // Inner class for category statistics data

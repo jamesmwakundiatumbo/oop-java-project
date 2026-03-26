@@ -45,6 +45,36 @@ public class OfficialDashboardController {
         categoryCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(getCategoryName(c.getValue().getCategoryId())));
         statusCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getStatus()));
         priorityCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getPriority()));
+
+        // Setup custom cell renderers for badges
+        statusCol.setCellFactory(column -> new javafx.scene.control.TableCell<Issue, String>() {
+            @Override
+            protected void updateItem(String status, boolean empty) {
+                super.updateItem(status, empty);
+                if (empty || status == null) {
+                    setGraphic(null);
+                } else {
+                    javafx.scene.control.Label badge = new javafx.scene.control.Label(status);
+                    badge.getStyleClass().addAll("status-badge", "status-" + status.toLowerCase().replace("_", "-"));
+                    setGraphic(badge);
+                }
+            }
+        });
+
+        priorityCol.setCellFactory(column -> new javafx.scene.control.TableCell<Issue, String>() {
+            @Override
+            protected void updateItem(String priority, boolean empty) {
+                super.updateItem(priority, empty);
+                if (empty || priority == null) {
+                    setGraphic(null);
+                } else {
+                    javafx.scene.control.Label badge = new javafx.scene.control.Label(priority);
+                    badge.getStyleClass().addAll("priority-badge", "priority-" + priority.toLowerCase());
+                    setGraphic(badge);
+                }
+            }
+        });
+
         statusCombo.getItems().addAll("PENDING", "IN_PROGRESS", "RESOLVED");
         issuesTable.getSelectionModel().selectedItemProperty().addListener((o, old, sel) -> {
             viewDetailButton.setDisable(sel == null);
@@ -95,8 +125,28 @@ public class OfficialDashboardController {
         ctrl.setIssueId(sel.getIssueId());
         ctrl.setShowOfficialActions(true);
         Stage stage = (Stage) welcomeLabel.getScene().getWindow();
-        stage.setScene(new Scene(root));
+
+        // Preserve current window state
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        double currentX = stage.getX();
+        double currentY = stage.getY();
+        boolean isMaximized = stage.isMaximized();
+
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+        stage.setScene(scene);
         stage.setTitle("CivicTrack - Issue #" + sel.getIssueId());
+
+        // Restore window state
+        if (isMaximized) {
+            stage.setMaximized(true);
+        } else {
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
+            stage.setX(currentX);
+            stage.setY(currentY);
+        }
     }
 
     @FXML
@@ -114,8 +164,28 @@ public class OfficialDashboardController {
     private void handleLogout() throws IOException {
         authService.logout();
         Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+
+        // Preserve current window state
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        double currentX = stage.getX();
+        double currentY = stage.getY();
+        boolean isMaximized = stage.isMaximized();
+
         Parent root = FXMLLoader.load(Main.class.getResource("/com/urbanissue/fxml/Login.fxml"));
-        stage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+        stage.setScene(scene);
         stage.setTitle("CivicTrack - Login");
+
+        // Restore window state
+        if (isMaximized) {
+            stage.setMaximized(true);
+        } else {
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
+            stage.setX(currentX);
+            stage.setY(currentY);
+        }
     }
 }

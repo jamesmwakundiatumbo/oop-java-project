@@ -22,8 +22,7 @@ public class Main extends Application {
         }
         Parent root = FXMLLoader.load(fxml);
         Scene scene = new Scene(root, 420, 380);
-        scene.getStylesheets().add(getClass().getResource("/com/urbanissue/css/global.css") != null
-                ? getClass().getResource("/com/urbanissue/css/global.css").toExternalForm() : "");
+        scene.getStylesheets().add(getClass().getResource("/com/urbanissue/css/app.css").toExternalForm());
         stage.setTitle("CivicTrack - Login");
         stage.setScene(scene);
         stage.setResizable(true);

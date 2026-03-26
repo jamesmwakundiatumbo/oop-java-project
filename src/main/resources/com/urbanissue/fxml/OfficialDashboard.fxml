@@ -3,25 +3,32 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.OfficialDashboardController"
-     spacing="16" prefWidth="700" prefHeight="500">
-    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
-    <HBox alignment="CENTER_LEFT" spacing="12">
-        <Label fx:id="welcomeLabel" text="Assigned issues" styleClass="welcome-label"/>
+     styleClass="main-container" spacing="0" prefWidth="800" prefHeight="600">
+
+    <!-- Modern header bar -->
+    <HBox styleClass="header-bar" alignment="CENTER_LEFT" spacing="16">
+        <Label fx:id="welcomeLabel" text="Assigned Issues" styleClass="welcome-label"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout"/>
+        <Button fx:id="logoutButton" text="Sign Out" onAction="#handleLogout" styleClass="button-secondary"/>
     </HBox>
-    <TableView fx:id="issuesTable" VBox.vgrow="ALWAYS" prefHeight="280">
-        <columns>
-            <TableColumn fx:id="idCol" text="ID" prefWidth="50"/>
-            <TableColumn fx:id="titleCol" text="Title" prefWidth="180"/>
-            <TableColumn fx:id="categoryCol" text="Category" prefWidth="100"/>
-            <TableColumn fx:id="statusCol" text="Status" prefWidth="100"/>
-            <TableColumn fx:id="priorityCol" text="Priority" prefWidth="80"/>
-        </columns>
-    </TableView>
-    <HBox spacing="8" alignment="CENTER_LEFT">
-        <Button fx:id="viewDetailButton" text="View / Update" onAction="#handleViewDetail" disable="true"/>
-        <ComboBox fx:id="statusCombo" promptText="Quick status" prefWidth="140"/>
-        <Button fx:id="updateStatusButton" text="Update status" onAction="#handleUpdateStatus" disable="true"/>
-    </HBox>
+
+    <!-- Main content card -->
+    <VBox styleClass="card" spacing="20" style="-fx-padding: 24;">
+        <Label text="My Assigned Issues" styleClass="section-label"/>
+        <TableView fx:id="issuesTable" VBox.vgrow="ALWAYS" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="idCol" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="titleCol" text="Title" prefWidth="220"/>
+                <TableColumn fx:id="categoryCol" text="Category" prefWidth="130"/>
+                <TableColumn fx:id="statusCol" text="Status" prefWidth="110"/>
+                <TableColumn fx:id="priorityCol" text="Priority" prefWidth="90"/>
+            </columns>
+        </TableView>
+        <HBox styleClass="action-bar" spacing="12" alignment="CENTER_LEFT">
+            <Button fx:id="viewDetailButton" text="View Details" onAction="#handleViewDetail" disable="true"/>
+            <ComboBox fx:id="statusCombo" promptText="Quick Status Update" prefWidth="150"/>
+            <Button fx:id="updateStatusButton" text="Update Status" onAction="#handleUpdateStatus"
+                    styleClass="button-secondary" disable="true"/>
+        </HBox>
+    </VBox>
 </VBox>

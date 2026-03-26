@@ -3,16 +3,28 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.LoginController"
-     alignment="CENTER" spacing="16" styleClass="login-root"
+     alignment="CENTER" styleClass="login-container"
      prefWidth="400" prefHeight="360">
-    <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
-    <Label text="CivicTrack" styleClass="title-label"/>
-    <Label text="Urban Issue Reporting" styleClass="subtitle-label"/>
-    <TextField fx:id="emailField" promptText="Email" maxWidth="280" prefHeight="36"/>
-    <PasswordField fx:id="passwordField" promptText="Password" maxWidth="280" prefHeight="36"/>
-    <HBox spacing="12" alignment="CENTER">
-        <Button fx:id="loginButton" text="Login" onAction="#handleLogin" defaultButton="true" prefWidth="120"/>
-        <Button fx:id="registerButton" text="Register" onAction="#handleRegister" cancelButton="true" prefWidth="120"/>
-    </HBox>
-    <Label fx:id="messageLabel" styleClass="message-label" visible="false" managed="false"/>
+
+    <!-- Modern login card -->
+    <VBox styleClass="login-card" spacing="24" maxWidth="400">
+        <VBox spacing="8" alignment="CENTER">
+            <Label text="CivicTrack" styleClass="title-label"/>
+            <Label text="Urban Issue Reporting System" styleClass="subtitle-label"/>
+        </VBox>
+
+        <VBox spacing="16" styleClass="form-container">
+            <TextField fx:id="emailField" promptText="Email address" prefHeight="44"/>
+            <PasswordField fx:id="passwordField" promptText="Password" prefHeight="44"/>
+
+            <VBox spacing="12">
+                <Button fx:id="loginButton" text="Sign In" onAction="#handleLogin"
+                        defaultButton="true" styleClass="button-primary" prefHeight="44"/>
+                <Button fx:id="registerButton" text="Create Account" onAction="#handleRegister"
+                        styleClass="button-secondary" prefHeight="44"/>
+            </VBox>
+
+            <Label fx:id="messageLabel" styleClass="error-message" visible="false" managed="false"/>
+        </VBox>
+    </VBox>
 </VBox>

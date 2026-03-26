@@ -3,26 +3,32 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.CitizenDashboardController"
-     spacing="16" prefWidth="640" prefHeight="480">
-    <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
-    <HBox alignment="CENTER_LEFT" spacing="12">
+     styleClass="main-container" spacing="0" prefWidth="800" prefHeight="600">
+
+    <!-- Modern header bar -->
+    <HBox styleClass="header-bar" alignment="CENTER_LEFT" spacing="16">
         <Label fx:id="welcomeLabel" text="Welcome" styleClass="welcome-label"/>
         <Region HBox.hgrow="ALWAYS"/>
         <Button fx:id="reportIssueButton" text="Report Issue" onAction="#handleReportIssue"/>
-        <Button fx:id="myIssuesButton" text="My Issues" onAction="#handleMyIssues"/>
-        <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout"/>
+        <Button fx:id="myIssuesButton" text="Refresh" onAction="#handleMyIssues" styleClass="button-secondary"/>
+        <Button fx:id="logoutButton" text="Sign Out" onAction="#handleLogout" styleClass="button-secondary"/>
     </HBox>
-    <TableView fx:id="issuesTable" VBox.vgrow="ALWAYS" prefHeight="300">
-        <columns>
-            <TableColumn fx:id="idCol" text="ID" prefWidth="50"/>
-            <TableColumn fx:id="titleCol" text="Title" prefWidth="150"/>
-            <TableColumn fx:id="categoryCol" text="Category" prefWidth="100"/>
-            <TableColumn fx:id="statusCol" text="Status" prefWidth="100"/>
-            <TableColumn fx:id="priorityCol" text="Priority" prefWidth="80"/>
-            <TableColumn fx:id="dateCol" text="Date" prefWidth="120"/>
-        </columns>
-    </TableView>
-    <HBox spacing="8">
-        <Button fx:id="viewDetailButton" text="View details" onAction="#handleViewDetail" disable="true"/>
-    </HBox>
+
+    <!-- Main content card -->
+    <VBox styleClass="card" spacing="20" style="-fx-padding: 24;">
+        <Label text="My Reported Issues" styleClass="section-label"/>
+        <TableView fx:id="issuesTable" VBox.vgrow="ALWAYS" prefHeight="400">
+            <columns>
+                <TableColumn fx:id="idCol" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="titleCol" text="Title" prefWidth="200"/>
+                <TableColumn fx:id="categoryCol" text="Category" prefWidth="120"/>
+                <TableColumn fx:id="statusCol" text="Status" prefWidth="110"/>
+                <TableColumn fx:id="priorityCol" text="Priority" prefWidth="90"/>
+                <TableColumn fx:id="dateCol" text="Date Reported" prefWidth="140"/>
+            </columns>
+        </TableView>
+        <HBox styleClass="action-bar" spacing="12" alignment="CENTER_LEFT">
+            <Button fx:id="viewDetailButton" text="View Details" onAction="#handleViewDetail" disable="true"/>
+        </HBox>
+    </VBox>
 </VBox>
