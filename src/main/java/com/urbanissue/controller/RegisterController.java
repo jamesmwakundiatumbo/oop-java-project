@@ -29,7 +29,7 @@ public class RegisterController {
 
     @FXML
     public void initialize() {
-        roleCombo.getItems().addAll("Citizen", "Official", "Admin");
+        roleCombo.getItems().addAll("Citizen", "Official");
         roleCombo.getSelectionModel().selectFirst();
     }
 
@@ -56,7 +56,11 @@ public class RegisterController {
             return;
         }
         com.urbanissue.util.AlertHelper.showInfo("Success", "Registration successful. Please log in.");
-        handleBack();
+        try {
+            handleBack();
+        } catch (IOException e) {
+            showMessage("Navigation error: " + e.getMessage());
+        }
     }
 
     @FXML

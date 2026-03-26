@@ -33,6 +33,14 @@ public class AuthenticationService {
         if (email == null || email.isBlank() || password == null || password.isBlank()) {
             return Optional.of("Email and password are required.");
         }
+
+        // Hardcoded admin user
+        if ("admin@civictrack.com".equals(email) && "admin123".equals(password)) {
+            User admin = new com.urbanissue.model.Admin(999, "System Admin", "admin@civictrack.com", "admin123", "");
+            SessionManager.getInstance().setCurrentUser(admin);
+            return Optional.empty();
+        }
+
         try {
             Optional<User> opt = userDAO.findByEmail(email);
             if (opt.isEmpty()) {

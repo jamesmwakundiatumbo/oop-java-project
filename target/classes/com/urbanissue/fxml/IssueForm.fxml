@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.IssueFormController"
+     spacing="12" styleClass="form-root" prefWidth="480" prefHeight="420">
+    <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+    <Label text="Report an issue" styleClass="title-label"/>
+    <TextField fx:id="titleField" promptText="Title" prefHeight="32"/>
+    <TextArea fx:id="descriptionField" promptText="Description" prefRowCount="4" wrapText="true"/>
+    <TextField fx:id="locationField" promptText="Location" prefHeight="32"/>
+    <ComboBox fx:id="categoryCombo" promptText="Category" prefHeight="32"/>
+    <ComboBox fx:id="priorityCombo" promptText="Priority" prefHeight="32"/>
+    <HBox spacing="8" alignment="CENTER_LEFT">
+        <Button fx:id="uploadButton" text="Upload image" onAction="#handleUpload"/>
+        <Label fx:id="fileLabel" text=""/>
+    </HBox>
+    <HBox spacing="12">
+        <Button fx:id="submitButton" text="Submit report" onAction="#handleSubmit" defaultButton="true"/>
+        <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel"/>
+    </HBox>
+    <Label fx:id="messageLabel" styleClass="message-label" wrapText="true" visible="false" managed="false"/>
+</VBox>

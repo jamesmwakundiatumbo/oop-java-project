@@ -26,7 +26,8 @@ public class Main extends Application {
                 ? getClass().getResource("/com/urbanissue/css/global.css").toExternalForm() : "");
         stage.setTitle("CivicTrack - Login");
         stage.setScene(scene);
-        stage.setResizable(false);
+        stage.setResizable(true);
+        stage.centerOnScreen();
         stage.show();
     }
 

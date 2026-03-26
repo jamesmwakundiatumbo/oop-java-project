@@ -65,7 +65,13 @@ public class IssueFormController {
             return;
         }
         com.urbanissue.util.AlertHelper.showInfo("Success", "Issue reported successfully.");
-        handleCancel();
+        try {
+            handleCancel();
+        } catch (IOException e) {
+            messageLabel.setText("Navigation error: " + e.getMessage());
+            messageLabel.setVisible(true);
+            messageLabel.setManaged(true);
+        }
     }
 
     @FXML

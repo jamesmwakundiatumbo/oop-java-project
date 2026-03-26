@@ -1,0 +1,422 @@
+@startuml CivicTrack_ClassDiagram
+
+!define TITLE CivicTrack - Urban Issue Reporting System Class Diagram
+
+title TITLE
+
+' Model Layer - Core Domain Objects
+package "Model Layer" {
+    abstract class User {
+        - userId : int
+        - name : String
+        - email : String
+        - password : String
+        - phone : String
+        - role : String
+        + User()
+        + User(userId, name, email, password, phone, role)
+        + {abstract} getDisplayRole() : String
+        + getUserId() : int
+        + setUserId(userId : int) : void
+        + getName() : String
+        + setName(name : String) : void
+        + getEmail() : String
+        + setEmail(email : String) : void
+        + getPassword() : String
+        + setPassword(password : String) : void
+        + getPhone() : String
+        + setPhone(phone : String) : void
+        + getRole() : String
+        + setRole(role : String) : void
+    }
+
+    class Citizen {
+        + Citizen()
+        + Citizen(userId, name, email, password, phone)
+        + getDisplayRole() : String
+    }
+
+    class Official {
+        - departmentId : Integer
+        + Official()
+        + Official(userId, name, email, password, phone, departmentId)
+        + getDisplayRole() : String
+        + getDepartmentId() : Integer
+        + setDepartmentId(departmentId : Integer) : void
+    }
+
+    class Admin {
+        + Admin()
+        + Admin(userId, name, email, password, phone)
+        + getDisplayRole() : String
+    }
+
+    class Issue {
+        - issueId : int
+        - title : String
+        - description : String
+        - location : String
+        - status : String
+        - priority : String
+        - dateReported : LocalDateTime
+        - reportedBy : Integer
+        - assignedOfficial : Integer
+        - categoryId : Integer
+        - comments : List<Comment>
+        - attachments : List<Attachment>
+        + Issue()
+        + getIssueId() : int
+        + setIssueId(issueId : int) : void
+        + getTitle() : String
+        + setTitle(title : String) : void
+        + getDescription() : String
+        + setDescription(description : String) : void
+        + getLocation() : String
+        + setLocation(location : String) : void
+        + getStatus() : String
+        + setStatus(status : String) : void
+        + getPriority() : String
+        + setPriority(priority : String) : void
+        + getDateReported() : LocalDateTime
+        + setDateReported(dateReported : LocalDateTime) : void
+        + getReportedBy() : Integer
+        + setReportedBy(reportedBy : Integer) : void
+        + getAssignedOfficial() : Integer
+        + setAssignedOfficial(assignedOfficial : Integer) : void
+        + getCategoryId() : Integer
+        + setCategoryId(categoryId : Integer) : void
+        + getComments() : List<Comment>
+        + setComments(comments : List<Comment>) : void
+        + getAttachments() : List<Attachment>
+        + setAttachments(attachments : List<Attachment>) : void
+    }
+
+    class Comment {
+        - commentId : int
+        - issueId : int
+        - userId : int
+        - commentText : String
+        - dateCreated : LocalDateTime
+        + Comment()
+        + Comment(commentId, issueId, userId, commentText, dateCreated)
+        + getCommentId() : int
+        + setCommentId(commentId : int) : void
+        + getIssueId() : int
+        + setIssueId(issueId : int) : void
+        + getUserId() : int
+        + setUserId(userId : int) : void
+        + getCommentText() : String
+        + setCommentText(commentText : String) : void
+        + getDateCreated() : LocalDateTime
+        + setDateCreated(dateCreated : LocalDateTime) : void
+    }
+
+    class Attachment {
+        - attachmentId : int
+        - issueId : int
+        - filePath : String
+        + Attachment()
+        + Attachment(attachmentId, issueId, filePath)
+        + getAttachmentId() : int
+        + setAttachmentId(attachmentId : int) : void
+        + getIssueId() : int
+        + setIssueId(issueId : int) : void
+        + getFilePath() : String
+        + setFilePath(filePath : String) : void
+    }
+
+    class IssueCategory {
+        - categoryId : int
+        - categoryName : String
+        + IssueCategory()
+        + IssueCategory(categoryId, categoryName)
+        + getCategoryId() : int
+        + setCategoryId(categoryId : int) : void
+        + getCategoryName() : String
+        + setCategoryName(categoryName : String) : void
+    }
+
+    class Department {
+        - departmentId : int
+        - departmentName : String
+        + Department()
+        + Department(departmentId, departmentName)
+        + getDepartmentId() : int
+        + setDepartmentId(departmentId : int) : void
+        + getDepartmentName() : String
+        + setDepartmentName(departmentName : String) : void
+    }
+
+    class Notification {
+        - notificationId : int
+        - userId : int
+        - message : String
+        - isRead : boolean
+        - createdAt : LocalDateTime
+        + Notification()
+        + getNotificationId() : int
+        + setNotificationId(notificationId : int) : void
+        + getUserId() : int
+        + setUserId(userId : int) : void
+        + getMessage() : String
+        + setMessage(message : String) : void
+        + isRead() : boolean
+        + setRead(read : boolean) : void
+        + getCreatedAt() : LocalDateTime
+        + setCreatedAt(createdAt : LocalDateTime) : void
+    }
+}
+
+' Data Access Layer
+package "DAO Layer" {
+    interface IssueDAOInterface {
+        + create(issue : Issue) : int
+        + findById(issueId : int) : Issue
+        + findAll() : List<Issue>
+        + findByReportedBy(userId : int) : List<Issue>
+        + findByAssignedOfficial(officialId : int) : List<Issue>
+        + update(issue : Issue) : boolean
+        + delete(issueId : int) : boolean
+    }
+
+    class IssueDAO {
+        + create(issue : Issue) : int
+        + findById(issueId : int) : Issue
+        + findAll() : List<Issue>
+        + findByReportedBy(userId : int) : List<Issue>
+        + findByAssignedOfficial(officialId : int) : List<Issue>
+        + update(issue : Issue) : boolean
+        + delete(issueId : int) : boolean
+        - mapRow(rs : ResultSet) : Issue
+    }
+
+    class UserDAO {
+        + create(user : User) : int
+        + findById(userId : int) : User
+        + findByEmail(email : String) : User
+        + findAll() : List<User>
+        + update(user : User) : boolean
+        + delete(userId : int) : boolean
+        + mapToUser(rs : ResultSet) : User
+    }
+
+    class CommentDAO {
+        + create(comment : Comment) : int
+        + findById(commentId : int) : Comment
+        + findByIssueId(issueId : int) : List<Comment>
+        + update(comment : Comment) : boolean
+        + delete(commentId : int) : boolean
+        - mapRow(rs : ResultSet) : Comment
+    }
+
+    class AttachmentDAO {
+        + create(attachment : Attachment) : int
+        + findById(attachmentId : int) : Attachment
+        + findByIssueId(issueId : int) : List<Attachment>
+        + delete(attachmentId : int) : boolean
+        - mapRow(rs : ResultSet) : Attachment
+    }
+
+    class IssueCategoryDAO {
+        + findAll() : List<IssueCategory>
+        + findById(categoryId : int) : IssueCategory
+        - mapRow(rs : ResultSet) : IssueCategory
+    }
+}
+
+' Service Layer
+package "Service Layer" {
+    class AuthenticationService {
+        - userDAO : UserDAO
+        + AuthenticationService()
+        + authenticate(email : String, password : String) : User
+        + register(user : User) : boolean
+    }
+
+    class IssueService {
+        - issueDAO : IssueDAO
+        - commentDAO : CommentDAO
+        - attachmentDAO : AttachmentDAO
+        + IssueService()
+        + createIssue(issue : Issue) : boolean
+        + getAllIssues() : List<Issue>
+        + getIssuesByUser(userId : int) : List<Issue>
+        + getIssuesByOfficial(officialId : int) : List<Issue>
+        + updateIssueStatus(issueId : int, status : String) : boolean
+        + assignIssueToOfficial(issueId : int, officialId : int) : boolean
+        + addComment(comment : Comment) : boolean
+        + getIssueComments(issueId : int) : List<Comment>
+    }
+
+    class ReportService {
+        - issueDAO : IssueDAO
+        + ReportService()
+        + getIssuesByStatus() : Map<String, Integer>
+        + getIssuesByPriority() : Map<String, Integer>
+        + getIssuesReport() : List<Issue>
+    }
+}
+
+' Database Management
+package "Database Layer" {
+    class DatabaseManager <<Singleton>> {
+        - {static} instance : DatabaseManager
+        - DatabaseManager()
+        + {static} getInstance() : DatabaseManager
+        + getConnection() : Connection
+    }
+
+    class DBConfig {
+        + {static} URL : String
+        + {static} USERNAME : String
+        + {static} PASSWORD : String
+    }
+}
+
+' Controller Layer
+package "Controller Layer" {
+    class LoginController {
+        - authService : AuthenticationService
+        + initialize() : void
+        + handleLogin() : void
+        + showRegister() : void
+    }
+
+    class CitizenDashboardController {
+        - issueService : IssueService
+        + initialize() : void
+        + loadMyIssues() : void
+        + showCreateIssue() : void
+    }
+
+    class OfficialDashboardController {
+        - issueService : IssueService
+        + initialize() : void
+        + loadAssignedIssues() : void
+        + updateIssueStatus() : void
+    }
+
+    class AdminDashboardController {
+        - issueService : IssueService
+        - reportService : ReportService
+        + initialize() : void
+        + loadAllIssues() : void
+        + assignIssue() : void
+        + generateReports() : void
+    }
+
+    class IssueFormController {
+        - issueService : IssueService
+        - issueCategoryDAO : IssueCategoryDAO
+        + initialize() : void
+        + handleSubmit() : void
+        + handleFileUpload() : void
+    }
+
+    class IssueDetailController {
+        - issueService : IssueService
+        + initialize() : void
+        + loadIssueDetails() : void
+        + addComment() : void
+        + updateStatus() : void
+    }
+
+    class RegisterController {
+        - authService : AuthenticationService
+        + initialize() : void
+        + handleRegister() : void
+        + showLogin() : void
+    }
+}
+
+' Utility Classes
+package "Utility Layer" {
+    class SessionManager <<Singleton>> {
+        - {static} instance : SessionManager
+        - currentUser : User
+        - SessionManager()
+        + {static} getInstance() : SessionManager
+        + setCurrentUser(user : User) : void
+        + getCurrentUser() : User
+        + clearSession() : void
+    }
+
+    class AlertHelper {
+        + {static} showInfo(title : String, message : String) : void
+        + {static} showError(title : String, message : String) : void
+        + {static} showConfirmation(title : String, message : String) : boolean
+    }
+
+    class ValidationHelper {
+        + {static} isValidEmail(email : String) : boolean
+        + {static} isValidPassword(password : String) : boolean
+        + {static} isValidPhone(phone : String) : boolean
+    }
+
+    class FileUploadHelper {
+        + {static} uploadFile(file : File) : String
+        + {static} deleteFile(filePath : String) : boolean
+    }
+}
+
+' Inheritance Relationships
+User <|-- Citizen : extends
+User <|-- Official : extends
+User <|-- Admin : extends
+
+' Interface Implementation
+IssueDAOInterface <|.. IssueDAO : implements
+
+' Composition Relationships
+Issue *-- Comment : contains
+Issue *-- Attachment : contains
+
+' Association Relationships
+Issue --> User : reportedBy
+Issue --> User : assignedOfficial
+Issue --> IssueCategory : belongsTo
+Official --> Department : belongsTo
+Comment --> User : createdBy
+Comment --> Issue : belongsTo
+Attachment --> Issue : belongsTo
+Notification --> User : sentTo
+
+' Service Dependencies
+AuthenticationService --> UserDAO : uses
+IssueService --> IssueDAO : uses
+IssueService --> CommentDAO : uses
+IssueService --> AttachmentDAO : uses
+ReportService --> IssueDAO : uses
+
+' Controller Dependencies
+LoginController --> AuthenticationService : uses
+CitizenDashboardController --> IssueService : uses
+OfficialDashboardController --> IssueService : uses
+AdminDashboardController --> IssueService : uses
+AdminDashboardController --> ReportService : uses
+IssueFormController --> IssueService : uses
+IssueFormController --> IssueCategoryDAO : uses
+IssueDetailController --> IssueService : uses
+RegisterController --> AuthenticationService : uses
+
+' DAO Dependencies
+IssueDAO --> DatabaseManager : uses
+UserDAO --> DatabaseManager : uses
+CommentDAO --> DatabaseManager : uses
+AttachmentDAO --> DatabaseManager : uses
+IssueCategoryDAO --> DatabaseManager : uses
+
+' Database Configuration
+DatabaseManager --> DBConfig : uses
+
+note top of User : Abstract base class\nDemonstrates Abstraction\nand Polymorphism
+
+note right of Issue : Core domain entity\nwith composition relationships\nto Comment and Attachment
+
+note bottom of IssueDAOInterface : Interface for abstraction\nAllows different implementations
+
+note left of SessionManager : Singleton pattern\nfor session management
+
+note right of DatabaseManager : Singleton pattern\nfor database connections
+
+@enduml

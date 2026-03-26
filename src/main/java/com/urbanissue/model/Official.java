@@ -23,4 +23,9 @@ public class Official extends User {
 
     public Integer getDepartmentId() { return departmentId; }
     public void setDepartmentId(Integer departmentId) { this.departmentId = departmentId; }
+
+    @Override
+    public String toString() {
+        return getName() + " (ID: " + getUserId() + ")";
+    }
 }

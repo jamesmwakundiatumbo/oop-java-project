@@ -25,6 +25,7 @@ public class OfficialDashboardController {
     @FXML private TableView<Issue> issuesTable;
     @FXML private TableColumn<Issue, Number> idCol;
     @FXML private TableColumn<Issue, String> titleCol;
+    @FXML private TableColumn<Issue, String> categoryCol;
     @FXML private TableColumn<Issue, String> statusCol;
     @FXML private TableColumn<Issue, String> priorityCol;
     @FXML private Button viewDetailButton;
@@ -33,6 +34,7 @@ public class OfficialDashboardController {
 
     private final IssueService issueService = new IssueService();
     private final AuthenticationService authService = new AuthenticationService();
+    private final java.util.Map<Integer, String> categoryNameCache = new java.util.HashMap<>();
 
     @FXML
     public void initialize() {
@@ -40,6 +42,7 @@ public class OfficialDashboardController {
         if (user != null) welcomeLabel.setText("Welcome, " + user.getName());
         idCol.setCellValueFactory(c -> new javafx.beans.property.SimpleIntegerProperty(c.getValue().getIssueId()));
         titleCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getTitle()));
+        categoryCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(getCategoryName(c.getValue().getCategoryId())));
         statusCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getStatus()));
         priorityCol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getPriority()));
         statusCombo.getItems().addAll("PENDING", "IN_PROGRESS", "RESOLVED");
@@ -52,8 +55,34 @@ public class OfficialDashboardController {
     }
 
     private void refreshAssigned() {
+        categoryNameCache.clear(); // Clear cache to get fresh category names
         List<Issue> list = issueService.getAssignedIssues();
         issuesTable.getItems().setAll(list);
+    }
+
+    private String getCategoryName(Integer categoryId) {
+        if (categoryId == null) return "";
+
+        // Check cache first
+        if (categoryNameCache.containsKey(categoryId)) {
+            return categoryNameCache.get(categoryId);
+        }
+
+        // Load from database via IssueService
+        try {
+            java.util.List<com.urbanissue.model.IssueCategory> categories = issueService.getAllCategories();
+            for (com.urbanissue.model.IssueCategory category : categories) {
+                categoryNameCache.put(category.getCategoryId(), category.getCategoryName());
+                if (category.getCategoryId() == categoryId) {
+                    return category.getCategoryName();
+                }
+            }
+        } catch (Exception e) {
+            // Log error but don't show to user for performance
+        }
+
+        categoryNameCache.put(categoryId, "Unknown Category");
+        return "Unknown Category";
     }
 
     @FXML

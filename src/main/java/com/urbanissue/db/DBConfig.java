@@ -6,7 +6,7 @@ package com.urbanissue.db;
 public final class DBConfig {
     public static final String URL = "jdbc:mysql://localhost:3306/civictrack?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
     public static final String USERNAME = "root";
-    public static final String PASSWORD = "";
+    public static final String PASSWORD = "password";
 
     private DBConfig() {}
 }
