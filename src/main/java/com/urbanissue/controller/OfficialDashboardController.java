@@ -32,9 +32,19 @@ public class OfficialDashboardController {
     @FXML private ComboBox<String> statusCombo;
     @FXML private Button updateStatusButton;
 
+    // Filter controls
+    @FXML private ComboBox<String> categoryFilterCombo;
+    @FXML private ComboBox<String> statusFilterCombo;
+    @FXML private ComboBox<String> priorityFilterCombo;
+    @FXML private Button applyFiltersButton;
+    @FXML private Button clearFiltersButton;
+
     private final IssueService issueService = new IssueService();
     private final AuthenticationService authService = new AuthenticationService();
     private final java.util.Map<Integer, String> categoryNameCache = new java.util.HashMap<>();
+
+    // Store original unfiltered list
+    private List<Issue> allIssuesList = new java.util.ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -81,13 +91,45 @@ public class OfficialDashboardController {
             updateStatusButton.setDisable(sel == null);
             if (sel != null) statusCombo.getSelectionModel().select(sel.getStatus());
         });
+
+        // Setup filter controls
+        setupFilterControls();
+
         refreshAssigned();
+    }
+
+    private void setupFilterControls() {
+        // Setup category filter
+        if (categoryFilterCombo != null) {
+            try {
+                List<com.urbanissue.model.IssueCategory> categories = issueService.getAllCategories();
+                categoryFilterCombo.getItems().add("All Categories");
+                for (com.urbanissue.model.IssueCategory category : categories) {
+                    categoryFilterCombo.getItems().add(category.getCategoryName());
+                }
+                categoryFilterCombo.getSelectionModel().selectFirst();
+            } catch (Exception e) {
+                System.err.println("Failed to load categories for filter: " + e.getMessage());
+            }
+        }
+
+        // Setup status filter
+        if (statusFilterCombo != null) {
+            statusFilterCombo.getItems().addAll("All Statuses", "PENDING", "IN_PROGRESS", "RESOLVED", "REJECTED", "CLOSED");
+            statusFilterCombo.getSelectionModel().selectFirst();
+        }
+
+        // Setup priority filter
+        if (priorityFilterCombo != null) {
+            priorityFilterCombo.getItems().addAll("All Priorities", "LOW", "MEDIUM", "HIGH");
+            priorityFilterCombo.getSelectionModel().selectFirst();
+        }
     }
 
     private void refreshAssigned() {
         categoryNameCache.clear(); // Clear cache to get fresh category names
-        List<Issue> list = issueService.getAssignedIssues();
-        issuesTable.getItems().setAll(list);
+        allIssuesList = issueService.getAssignedIssues();
+        issuesTable.getItems().setAll(allIssuesList);
     }
 
     private String getCategoryName(Integer categoryId) {
@@ -187,5 +229,56 @@ public class OfficialDashboardController {
             stage.setX(currentX);
             stage.setY(currentY);
         }
+    }
+
+    @FXML
+    private void handleApplyFilters() {
+        List<Issue> filteredList = new java.util.ArrayList<>(allIssuesList);
+
+        // Filter by category
+        String selectedCategory = categoryFilterCombo != null ? categoryFilterCombo.getSelectionModel().getSelectedItem() : null;
+        if (selectedCategory != null && !selectedCategory.equals("All Categories")) {
+            filteredList = filteredList.stream()
+                .filter(issue -> {
+                    String categoryName = getCategoryName(issue.getCategoryId());
+                    return selectedCategory.equals(categoryName);
+                })
+                .collect(java.util.stream.Collectors.toList());
+        }
+
+        // Filter by status
+        String selectedStatus = statusFilterCombo != null ? statusFilterCombo.getSelectionModel().getSelectedItem() : null;
+        if (selectedStatus != null && !selectedStatus.equals("All Statuses")) {
+            filteredList = filteredList.stream()
+                .filter(issue -> selectedStatus.equals(issue.getStatus()))
+                .collect(java.util.stream.Collectors.toList());
+        }
+
+        // Filter by priority
+        String selectedPriority = priorityFilterCombo != null ? priorityFilterCombo.getSelectionModel().getSelectedItem() : null;
+        if (selectedPriority != null && !selectedPriority.equals("All Priorities")) {
+            filteredList = filteredList.stream()
+                .filter(issue -> selectedPriority.equals(issue.getPriority()))
+                .collect(java.util.stream.Collectors.toList());
+        }
+
+        issuesTable.getItems().setAll(filteredList);
+    }
+
+    @FXML
+    private void handleClearFilters() {
+        // Reset all filter selections
+        if (categoryFilterCombo != null) {
+            categoryFilterCombo.getSelectionModel().selectFirst(); // Select "All Categories"
+        }
+        if (statusFilterCombo != null) {
+            statusFilterCombo.getSelectionModel().selectFirst(); // Select "All Statuses"
+        }
+        if (priorityFilterCombo != null) {
+            priorityFilterCombo.getSelectionModel().selectFirst(); // Select "All Priorities"
+        }
+
+        // Show all issues
+        issuesTable.getItems().setAll(allIssuesList);
     }
 }

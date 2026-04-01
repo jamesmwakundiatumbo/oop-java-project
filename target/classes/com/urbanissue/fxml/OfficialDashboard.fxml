@@ -15,7 +15,34 @@
     <!-- Main content card -->
     <VBox styleClass="card" spacing="20" style="-fx-padding: 24;">
         <Label text="My Assigned Issues" styleClass="section-label"/>
-        <TableView fx:id="issuesTable" VBox.vgrow="ALWAYS" prefHeight="400">
+
+        <!-- Filter Controls -->
+        <VBox spacing="12">
+            <Label text="Filters" styleClass="metric-title"/>
+            <HBox spacing="16" alignment="CENTER_LEFT">
+                <VBox spacing="4">
+                    <Label text="Category:" style="-fx-font-size: 12px; -fx-text-fill: #64748b;"/>
+                    <ComboBox fx:id="categoryFilterCombo" promptText="All Categories" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="Status:" style="-fx-font-size: 12px; -fx-text-fill: #64748b;"/>
+                    <ComboBox fx:id="statusFilterCombo" promptText="All Statuses" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="Priority:" style="-fx-font-size: 12px; -fx-text-fill: #64748b;"/>
+                    <ComboBox fx:id="priorityFilterCombo" promptText="All Priorities" prefWidth="150"/>
+                </VBox>
+                <VBox spacing="4" alignment="BOTTOM_LEFT">
+                    <Label text=" " style="-fx-font-size: 12px;"/>
+                    <HBox spacing="8">
+                        <Button fx:id="applyFiltersButton" text="Apply Filters" onAction="#handleApplyFilters" styleClass="button-secondary"/>
+                        <Button fx:id="clearFiltersButton" text="Clear" onAction="#handleClearFilters" styleClass="button-secondary"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <TableView fx:id="issuesTable" VBox.vgrow="ALWAYS" prefHeight="350">
             <columns>
                 <TableColumn fx:id="idCol" text="ID" prefWidth="60"/>
                 <TableColumn fx:id="titleCol" text="Title" prefWidth="220"/>
