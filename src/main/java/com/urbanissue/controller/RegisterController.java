@@ -22,7 +22,6 @@ public class RegisterController {
     @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
     @FXML private TextField phoneField;
-    @FXML private ComboBox<String> roleCombo;
     @FXML private Label messageLabel;
 
     private final AuthenticationService authService = new AuthenticationService();

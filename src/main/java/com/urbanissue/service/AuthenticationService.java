@@ -72,6 +72,12 @@ public class AuthenticationService {
         if (raw == null) {
             return "Database error.";
         }
+        if (raw.contains("Access denied for user")) {
+            return "MySQL rejected the username/password. Update DBConfig.java to match your MySQL credentials.";
+        }
+        if (raw.contains("Unknown database")) {
+            return "Database 'civictrack' does not exist. Run schema.sql first.";
+        }
         if (raw.contains("Communications link failure") || raw.contains("Connection refused")) {
             return "Cannot reach MySQL. Start the MySQL service and check URL, username, and password in DBConfig.java.";
         }
