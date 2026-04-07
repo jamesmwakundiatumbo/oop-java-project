@@ -2,12 +2,12 @@ package com.urbanissue.controller;
 
 import com.urbanissue.Main;
 import com.urbanissue.service.AuthenticationService;
+import com.urbanissue.util.UserGuideHelper;
 import com.urbanissue.util.ValidationHelper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -28,9 +28,8 @@ public class RegisterController {
     private final AuthenticationService authService = new AuthenticationService();
 
     @FXML
-    public void initialize() {
-        roleCombo.getItems().addAll("Citizen", "Official");
-        roleCombo.getSelectionModel().selectFirst();
+    private void handleUserGuide() {
+        UserGuideHelper.show((Stage) nameField.getScene().getWindow());
     }
 
     @FXML
@@ -39,18 +38,10 @@ public class RegisterController {
         String email = emailField.getText();
         String password = passwordField.getText();
         String phone = phoneField.getText() != null ? phoneField.getText().trim() : "";
-        String role = "CITIZEN";
-        if (roleCombo.getSelectionModel().getSelectedItem() != null) {
-            role = switch (roleCombo.getSelectionModel().getSelectedItem().toLowerCase()) {
-                case "official" -> "OFFICIAL";
-                case "admin" -> "ADMIN";
-                default -> "CITIZEN";
-            };
-        }
         if (ValidationHelper.isBlank(name)) { showMessage("Name is required."); return; }
         if (!ValidationHelper.isValidEmail(email)) { showMessage("Valid email is required."); return; }
         if (!ValidationHelper.isValidPasswordLength(password, 4)) { showMessage("Password must be at least 4 characters."); return; }
-        Optional<String> error = authService.register(name.trim(), email.trim(), password, phone, role);
+        Optional<String> error = authService.registerCitizen(name.trim(), email.trim(), password, phone);
         if (error.isPresent()) {
             showMessage(error.get());
             return;

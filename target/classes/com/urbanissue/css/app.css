@@ -517,3 +517,42 @@
 .scroll-bar .increment-button, .scroll-bar .decrement-button {
     -fx-background-color: transparent;
 }
+
+/* ===================== LANDING (CivicTrack welcome) ===================== */
+.landing-scroll {
+    -fx-background-color: -surface;
+    -fx-fit-to-width: true;
+}
+
+.landing-scroll > .viewport {
+    -fx-background-color: -surface;
+}
+
+.landing-root {
+    -fx-max-width: 1200px;
+    -fx-background-color: -surface;
+}
+
+.landing-card {
+    -fx-background-color: -background;
+    -fx-background-radius: 12;
+    -fx-border-color: -border;
+    -fx-border-radius: 12;
+    -fx-padding: 20;
+    -fx-spacing: 12;
+}
+
+.landing-card-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 600;
+    -fx-text-fill: -primary;
+}
+
+.landing-footer {
+    -fx-font-size: 15px;
+    -fx-font-weight: 500;
+    -fx-text-fill: -text-secondary;
+    -fx-padding: 24 0 0 0;
+    -fx-border-color: -border;
+    -fx-border-width: 1 0 0 0;
+}

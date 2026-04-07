@@ -1,0 +1,12 @@
+FOR RESIDENTS — HOW CIVICTRACK WORKS
+
+Need to report a problem in your local area? CivicTrack helps you tell the right people what is wrong — whether it is a pothole, a broken street light, fly-tipping, or another urban issue.
+
+WHAT YOU CAN DO
+• Create an account as a Citizen.
+• Submit a report with a title, description, location, category, and priority.
+• Optionally attach a photo so staff can see the problem.
+• Track your own reports and see when status changes (for example PENDING → IN PROGRESS → RESOLVED).
+
+WHAT HAPPENS NEXT
+Your report is stored securely in the system. Depending on how your city or organization uses CivicTrack, an administrator may assign your report to the right official or department. You can add comments on your report to provide updates.

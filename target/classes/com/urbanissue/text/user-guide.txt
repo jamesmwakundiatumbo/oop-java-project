@@ -1,0 +1,60 @@
+CIVICTRACK — USER GUIDE
+========================
+
+Run MySQL, load schema.sql, then optionally load seed-demo.sql for ready-made accounts (see DEMO USERS below).
+
+────────────────────────
+DEMO USERS (Citizen, Official, Admin)
+────────────────────────
+After:  mysql -u root -p < seed-demo.sql
+
+  Role      Email                         Password
+  --------  ----------------------------  --------
+  Citizen   citizen@civictrack.local      pass123
+  Official  official@civictrack.local     pass123
+  Admin     admin@civictrack.local        pass123
+
+You can create your own account from Create Account: everyone self-registers as a Citizen. Official and Admin accounts come from your organisation (e.g. seed-demo.sql or an admin).
+
+SUPER ADMIN (codebase account)
+  Email: superadmin@civictrack.local
+  Password: superadmin123
+Use this account to sign in when needed, then approve/promote users from Admin → User Management.
+
+────────────────────────
+FEATURES
+────────────────────────
+
+1) USER REGISTRATION (self-service + seeded roles)
+   • Sign in screen → Create Account.
+   • Enter name, email, password, phone (optional).
+   • You are registered as a Citizen automatically.
+   • Official / Admin: use seed-demo.sql or accounts your organisation creates.
+
+2) LOGIN WITH ROLE-BASED DASHBOARDS
+   • Citizen → dashboard: report issues, My Issues.
+   • Official → dashboard: issues assigned to you.
+   • Admin → dashboard: all issues, assign officials, users/stats, reports.
+
+3) REPORT ISSUE (Citizen)
+   • Title, description, location, category, priority.
+   • Optional image/file attachment when the form provides upload.
+
+4) VIEW REPORTED ISSUES
+   • Citizen: My Issues (your reports only).
+   • Official: Assigned (assigned to you).
+   • Admin: All issues.
+
+5) ASSIGN ISSUE TO OFFICIAL (Admin)
+   • Select an issue, choose an official, assign.
+
+6) UPDATE ISSUE STATUS (Official)
+   • PENDING → IN_PROGRESS → RESOLVED (dashboard or issue detail).
+
+7) ADD COMMENTS ON AN ISSUE
+   • Open issue detail, enter text, save/add comment.
+
+8) REPORTS (Admin)
+   • Issues by status and by priority (admin reports / statistics area).
+
+TIP: Use Refresh where available. Rebuild (mvn compile) if help text looks outdated.

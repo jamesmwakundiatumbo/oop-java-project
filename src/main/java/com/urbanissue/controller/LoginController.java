@@ -50,6 +50,30 @@ public class LoginController {
     }
 
     @FXML
+    private void handleBackToWelcome() throws IOException {
+        Stage stage = (Stage) emailField.getScene().getWindow();
+        double w = stage.getWidth();
+        double h = stage.getHeight();
+        double x = stage.getX();
+        double y = stage.getY();
+        boolean max = stage.isMaximized();
+
+        Parent root = FXMLLoader.load(Main.class.getResource("/com/urbanissue/fxml/Landing.fxml"));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Main.class.getResource("/com/urbanissue/css/app.css").toExternalForm());
+        stage.setScene(scene);
+        stage.setTitle("CivicTrack - Welcome");
+        if (max) {
+            stage.setMaximized(true);
+        } else {
+            stage.setWidth(w);
+            stage.setHeight(h);
+            stage.setX(x);
+            stage.setY(y);
+        }
+    }
+
+    @FXML
     private void handleRegister() throws IOException {
         Stage stage = (Stage) emailField.getScene().getWindow();
 

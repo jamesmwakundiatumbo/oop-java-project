@@ -4,13 +4,16 @@
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.LoginController"
      alignment="CENTER" styleClass="login-container"
-     prefWidth="400" prefHeight="360">
+     prefWidth="960" prefHeight="640" maxWidth="Infinity" maxHeight="Infinity">
 
     <!-- Modern login card -->
     <VBox styleClass="login-card" spacing="24" maxWidth="400">
+        <Hyperlink text="← Back to welcome" onAction="#handleBackToWelcome" style="-fx-padding: 0;"/>
         <VBox spacing="8" alignment="CENTER">
             <Label text="CivicTrack" styleClass="title-label"/>
             <Label text="Urban Issue Reporting System" styleClass="subtitle-label"/>
+            <Label text="New here? Use Create Account — you choose your email and password." wrapText="true"
+                   style="-fx-text-fill: #64748b; -fx-font-size: 12px; -fx-text-alignment: center; -fx-max-width: 360;"/>
         </VBox>
 
         <VBox spacing="16" styleClass="form-container">

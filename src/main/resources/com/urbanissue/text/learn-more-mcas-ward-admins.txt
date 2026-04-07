@@ -1,0 +1,14 @@
+FOR MCAs, WARD ADMINS & OFFICIALS — USING CIVICTRACK
+
+If you are a Member of County Assembly (MCA), a ward administrator, or a public works / service official, CivicTrack helps you see what residents report and manage assignments in one place.
+
+FOR OFFICIALS
+• Sign in with an Official account.
+• View issues assigned to you by an administrator (or ward workflow as configured).
+• Update status as work progresses: PENDING → IN_PROGRESS → RESOLVED.
+• Read and respond via comments where the app supports it.
+
+FOR ADMINISTRATORS (WARD / SYSTEM)
+• See all reported issues.
+• Assign issues to the appropriate official.
+• Use reports and statistics (where implemented) to view workload by status and priority.

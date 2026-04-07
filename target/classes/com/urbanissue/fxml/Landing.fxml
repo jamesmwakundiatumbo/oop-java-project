@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<ScrollPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.LandingController"
+            fitToWidth="true" styleClass="landing-scroll" hbarPolicy="NEVER">
+    <VBox spacing="32" styleClass="landing-root" fillWidth="true">
+        <padding>
+            <Insets top="40" right="48" bottom="40" left="48"/>
+        </padding>
+
+        <VBox spacing="12" alignment="CENTER">
+            <Label text="CivicTrack" styleClass="title-label"/>
+            <Label text="Report local problems. Track what happens next." styleClass="subtitle-label" wrapText="true"/>
+        </VBox>
+
+        <HBox alignment="CENTER">
+            <Button text="Sign in" onAction="#handleSignIn" styleClass="button-primary" prefHeight="48" prefWidth="220"/>
+        </HBox>
+
+        <GridPane hgap="24" vgap="20">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="240" prefWidth="480" maxWidth="Infinity"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="240" prefWidth="480" maxWidth="Infinity"/>
+            </columnConstraints>
+
+            <VBox styleClass="landing-card" spacing="16" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="For residents" styleClass="landing-card-title"/>
+                <Label wrapText="true" maxWidth="Infinity"
+                       text="Need to report a problem in your local area? Learn how CivicTrack works, what you can report, and what happens to your report after you submit it."/>
+                <Button text="Learn more" onAction="#handleLearnMoreCitizens" styleClass="button-secondary"/>
+            </VBox>
+
+            <VBox styleClass="landing-card" spacing="16" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label text="For MCAs &amp; ward admins" styleClass="landing-card-title"/>
+                <Label wrapText="true" maxWidth="Infinity"
+                       text="For ward leadership and service teams: triage reports, assign work to officials, and keep residents’ issues moving through to resolution."/>
+                <Button text="Learn more" onAction="#handleLearnMoreMcasWardAdmins" styleClass="button-secondary"/>
+            </VBox>
+        </GridPane>
+
+        <Label fx:id="footerTaglineLabel" wrapText="true" maxWidth="Infinity" styleClass="landing-footer"/>
+    </VBox>
+</ScrollPane>

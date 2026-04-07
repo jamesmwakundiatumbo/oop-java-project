@@ -7,6 +7,7 @@ import com.urbanissue.model.User;
 import com.urbanissue.service.AuthenticationService;
 import com.urbanissue.service.IssueService;
 import com.urbanissue.util.SessionManager;
+import com.urbanissue.util.UserGuideHelper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -157,6 +158,11 @@ public class AdminDashboardController {
         refreshAllIssues();
         refreshUsers();
         refreshStats();
+    }
+
+    @FXML
+    private void handleUserGuide() {
+        UserGuideHelper.show((Stage) welcomeLabel.getScene().getWindow());
     }
 
     private void setupFilterControls() {
@@ -407,14 +413,38 @@ public class AdminDashboardController {
 
     @FXML
     private void handleAddUser() {
-        com.urbanissue.util.AlertHelper.showInfo("Add User", "Add user feature to be implemented");
+        com.urbanissue.util.AlertHelper.showInfo(
+                "User provisioning",
+                "Public sign-up is Citizen-only.\nUse seed-demo.sql or promote users from Edit User."
+        );
     }
 
     @FXML
     private void handleEditUser() {
         User selected = usersTable.getSelectionModel().getSelectedItem();
         if (selected == null) return;
-        com.urbanissue.util.AlertHelper.showInfo("Edit User", "Edit user feature to be implemented for: " + selected.getName());
+        if ("ADMIN".equalsIgnoreCase(selected.getRole())) {
+            com.urbanissue.util.AlertHelper.showInfo("No change", selected.getName() + " is already an Admin.");
+            return;
+        }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Approve and promote");
+        confirm.setHeaderText("Promote user to Admin");
+        confirm.setContentText("User: " + selected.getName() + " (" + selected.getEmail() + ")\n"
+                + "This action gives Admin dashboard access.");
+        confirm.showAndWait().ifPresent(result -> {
+            if (result != ButtonType.OK) return;
+            try {
+                if (userDAO.updateRole(selected.getUserId(), "ADMIN")) {
+                    com.urbanissue.util.AlertHelper.showInfo("Success", "User promoted to Admin.");
+                    refreshUsers();
+                } else {
+                    com.urbanissue.util.AlertHelper.showError("Error", "No user was updated.");
+                }
+            } catch (Exception e) {
+                com.urbanissue.util.AlertHelper.showError("Error", "Failed to update role: " + e.getMessage());
+            }
+        });
     }
 
     @FXML

@@ -4,27 +4,29 @@
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.RegisterController"
      alignment="CENTER" styleClass="login-container"
-     prefWidth="450" prefHeight="500">
+     prefWidth="960" prefHeight="640" maxWidth="Infinity" maxHeight="Infinity">
 
     <!-- Modern registration card -->
     <VBox styleClass="login-card" spacing="24" maxWidth="400">
         <VBox spacing="8" alignment="CENTER">
-            <Label text="Create Account" styleClass="title-label"/>
-            <Label text="Join CivicTrack today" styleClass="subtitle-label"/>
+            <Label text="Create your account" styleClass="title-label"/>
+            <Label text="Anyone can sign up as a resident to report local issues." styleClass="subtitle-label" wrapText="true"/>
         </VBox>
 
         <VBox spacing="16" styleClass="form-container">
+            <Label text="You will be registered as a Citizen. Official and Admin accounts are set up by your organisation." wrapText="true" style="-fx-text-fill: #64748b; -fx-font-size: 12px;"/>
             <TextField fx:id="nameField" promptText="Full name" prefHeight="44"/>
             <TextField fx:id="emailField" promptText="Email address" prefHeight="44"/>
-            <PasswordField fx:id="passwordField" promptText="Password" prefHeight="44"/>
+            <PasswordField fx:id="passwordField" promptText="Password (min. 4 characters)" prefHeight="44"/>
             <TextField fx:id="phoneField" promptText="Phone number (optional)" prefHeight="44"/>
-            <ComboBox fx:id="roleCombo" promptText="Select your role" prefHeight="44"/>
 
             <VBox spacing="12">
                 <Button fx:id="registerButton" text="Create Account" onAction="#handleRegister"
                         defaultButton="true" styleClass="button-primary" prefHeight="44"/>
                 <Button fx:id="backButton" text="Back to Login" onAction="#handleBack"
                         styleClass="button-secondary" prefHeight="44"/>
+                <Button text="User guide" onAction="#handleUserGuide"
+                        styleClass="button-secondary" prefHeight="40"/>
             </VBox>
 
             <Label fx:id="messageLabel" styleClass="error-message" wrapText="true" visible="false" managed="false"/>

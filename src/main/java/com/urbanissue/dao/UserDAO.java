@@ -110,4 +110,14 @@ public class UserDAO {
         }
         return list;
     }
+
+    public boolean updateRole(int userId, String role) throws SQLException {
+        String sql = "UPDATE users SET role = ? WHERE user_id = ?";
+        try (Connection conn = DatabaseManager.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, role != null ? role.toUpperCase() : "CITIZEN");
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        }
+    }
 }

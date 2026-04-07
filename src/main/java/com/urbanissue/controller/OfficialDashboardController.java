@@ -5,6 +5,7 @@ import com.urbanissue.model.Issue;
 import com.urbanissue.service.AuthenticationService;
 import com.urbanissue.service.IssueService;
 import com.urbanissue.util.SessionManager;
+import com.urbanissue.util.UserGuideHelper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -96,6 +97,11 @@ public class OfficialDashboardController {
         setupFilterControls();
 
         refreshAssigned();
+    }
+
+    @FXML
+    private void handleUserGuide() {
+        UserGuideHelper.show((Stage) welcomeLabel.getScene().getWindow());
     }
 
     private void setupFilterControls() {

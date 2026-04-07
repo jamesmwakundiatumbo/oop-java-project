@@ -3,12 +3,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.AdminDashboardController"
-     styleClass="main-container" spacing="0" prefWidth="900" prefHeight="700">
+     styleClass="main-container" spacing="0" prefWidth="1200" prefHeight="800">
 
     <!-- Modern header bar -->
     <HBox styleClass="header-bar" alignment="CENTER_LEFT" spacing="16">
         <Label fx:id="welcomeLabel" text="Admin Dashboard" styleClass="welcome-label"/>
         <Region HBox.hgrow="ALWAYS"/>
+        <Button text="User guide" onAction="#handleUserGuide" styleClass="button-secondary"/>
         <Button fx:id="logoutButton" text="Sign Out" onAction="#handleLogout" styleClass="button-secondary"/>
     </HBox>
 
@@ -78,7 +79,7 @@
                 </TableView>
                 <HBox styleClass="action-bar" spacing="12" alignment="CENTER_LEFT">
                     <Button fx:id="addUserButton" text="Add User" onAction="#handleAddUser"/>
-                    <Button fx:id="editUserButton" text="Edit User" onAction="#handleEditUser"
+                    <Button fx:id="editUserButton" text="Approve/Promote Admin" onAction="#handleEditUser"
                             styleClass="button-secondary" disable="true"/>
                     <Button fx:id="deleteUserButton" text="Delete User" onAction="#handleDeleteUser"
                             styleClass="button-danger" disable="true"/>

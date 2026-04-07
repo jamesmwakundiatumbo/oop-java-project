@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.urbanissue.controller.CitizenDashboardController"
-     styleClass="main-container" spacing="0" prefWidth="800" prefHeight="600">
+     styleClass="main-container" spacing="0" prefWidth="1100" prefHeight="720">
 
     <!-- Modern header bar -->
     <HBox styleClass="header-bar" alignment="CENTER_LEFT" spacing="16">
@@ -11,11 +11,12 @@
         <Region HBox.hgrow="ALWAYS"/>
         <Button fx:id="reportIssueButton" text="Report Issue" onAction="#handleReportIssue"/>
         <Button fx:id="myIssuesButton" text="Refresh" onAction="#handleMyIssues" styleClass="button-secondary"/>
+        <Button text="User guide" onAction="#handleUserGuide" styleClass="button-secondary"/>
         <Button fx:id="logoutButton" text="Sign Out" onAction="#handleLogout" styleClass="button-secondary"/>
     </HBox>
 
     <!-- Main content card -->
-    <VBox styleClass="card" spacing="20" style="-fx-padding: 24;">
+    <VBox styleClass="card" spacing="20" style="-fx-padding: 24;" VBox.vgrow="ALWAYS">
         <Label text="My Reported Issues" styleClass="section-label"/>
 
         <!-- Filter Controls -->
