@@ -23,8 +23,6 @@
             <VBox spacing="12">
                 <Button fx:id="registerButton" text="Create Account" onAction="#handleRegister"
                         defaultButton="true" styleClass="button-primary" prefHeight="44"/>
-                <Button fx:id="backButton" text="Back to Login" onAction="#handleBack"
-                        styleClass="button-secondary" prefHeight="44"/>
                 <Button text="User guide" onAction="#handleUserGuide"
                         styleClass="button-secondary" prefHeight="40"/>
             </VBox>
