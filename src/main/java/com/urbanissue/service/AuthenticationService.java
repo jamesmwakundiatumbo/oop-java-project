@@ -78,10 +78,24 @@ public class AuthenticationService {
         if (raw.contains("Unknown database")) {
             return "Database 'civictrack' does not exist. Run schema.sql first.";
         }
-        if (raw.contains("Communications link failure") || raw.contains("Connection refused")) {
-            return "Cannot reach MySQL. Start the MySQL service and check URL, username, and password in DBConfig.java.";
+        if (isUnreachableMySql(raw)) {
+            return "Cannot reach MySQL on the URL in use. "
+                    + "Start the MySQL server (or MariaDB), confirm port 3306 is listening, "
+                    + "and set CIVICTRACK_DB_URL / CIVICTRACK_DB_USERNAME / CIVICTRACK_DB_PASSWORD "
+                    + "if your database is not on localhost. "
+                    + "Create schema with schema.sql if you have not already.";
         }
         return raw;
+    }
+
+    private static boolean isUnreachableMySql(String raw) {
+        String r = raw.toLowerCase();
+        return raw.contains("Communications link failure")
+                || raw.contains("Connection refused")
+                || r.contains("connect timed out")
+                || r.contains("connection timed out")
+                || r.contains("no route to host")
+                || r.contains("failed to connect");
     }
 
     public void logout() {

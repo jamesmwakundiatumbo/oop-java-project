@@ -1,0 +1,9 @@
+# Copy this file to local-db-env.ps1 (same folder) and set your MySQL credentials.
+# local-db-env.ps1 is listed in .gitignore — do not commit real passwords.
+
+$env:CIVICTRACK_DB_URL       = 'jdbc:mysql://localhost:3306/civictrack?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true'
+$env:CIVICTRACK_DB_USERNAME = 'your_mysql_user'
+$env:CIVICTRACK_DB_PASSWORD = 'your_mysql_password'
+
+# Optional: if mysql.exe is not under MySQL 9.5 default path (used by import-database.ps1)
+# $env:CIVICTRACK_MYSQL_EXE = 'C:\Program Files\MySQL\MySQL Server 9.5\bin\mysql.exe'
