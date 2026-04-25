@@ -102,6 +102,23 @@ public class GeoLocation {
                longitude >= -180.0 && longitude <= 180.0;
     }
 
+    /**
+     * Checks if this location is within a specified distance of another location
+     * @param other The other location to check distance to
+     * @param radiusKm The maximum distance in kilometers
+     * @return true if the other location is within the specified radius
+     * @throws IllegalArgumentException if other location is null or radius is invalid
+     */
+    public boolean isWithinRadius(GeoLocation other, double radiusKm) {
+        if (other == null) {
+            throw new IllegalArgumentException("Other location cannot be null");
+        }
+        if (radiusKm <= 0) {
+            throw new IllegalArgumentException("Radius must be positive");
+        }
+        return distanceToKm(other) <= radiusKm;
+    }
+
     @Override
     public String toString() {
         return formattedAddress + " (" + latitude + ", " + longitude + ")";

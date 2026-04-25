@@ -12,6 +12,9 @@ import java.net.SocketTimeoutException;
 import java.net.ConnectException;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -339,5 +342,219 @@ public class GeoLocationService {
                 connection.disconnect();
             }
         }
+    }
+
+    /**
+     * Searches for places of interest within a specified radius of a location
+     * @param centerLocation The center location to search around
+     * @param radiusKm Search radius in kilometers
+     * @param category Optional category filter (e.g., "restaurant", "hospital", "school")
+     * @param limit Maximum number of results to return (1-50)
+     * @return List of locations within the specified radius
+     * @throws IllegalArgumentException if parameters are invalid
+     */
+    public List<GeoLocation> findNearbyPlaces(GeoLocation centerLocation, double radiusKm, String category, int limit) {
+        if (centerLocation == null) {
+            throw new IllegalArgumentException("Center location cannot be null");
+        }
+        if (radiusKm <= 0 || radiusKm > 100) {
+            throw new IllegalArgumentException("Radius must be between 0 and 100 kilometers");
+        }
+        if (limit <= 0 || limit > 50) {
+            throw new IllegalArgumentException("Limit must be between 1 and 50");
+        }
+
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+
+        try {
+            // Calculate bounding box for the search area
+            double latDelta = radiusKm / 111.0; // Approximate km per degree of latitude
+            double lonDelta = radiusKm / (111.0 * Math.cos(Math.toRadians(centerLocation.getLatitude())));
+
+            double minLat = centerLocation.getLatitude() - latDelta;
+            double maxLat = centerLocation.getLatitude() + latDelta;
+            double minLon = centerLocation.getLongitude() - lonDelta;
+            double maxLon = centerLocation.getLongitude() + lonDelta;
+
+            // Build search query
+            StringBuilder queryBuilder = new StringBuilder();
+            if (category != null && !category.trim().isEmpty()) {
+                queryBuilder.append(URLEncoder.encode(category.trim(), StandardCharsets.UTF_8));
+            } else {
+                queryBuilder.append("amenity");
+            }
+
+            String urlString = NOMINATIM_URL + "?q=" + queryBuilder.toString() +
+                             "&format=json&limit=" + (limit * 2) + // Get more results to filter
+                             "&bounded=1&viewbox=" + minLon + "," + maxLat + "," + maxLon + "," + minLat +
+                             "&addressdetails=1";
+
+            URL url = new URL(urlString);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", USER_AGENT);
+            connection.setConnectTimeout(SEARCH_CONNECT_TIMEOUT);
+            connection.setReadTimeout(SEARCH_READ_TIMEOUT);
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                logger.log(Level.WARNING, "Nearby places search failed with HTTP {0}", responseCode);
+                return new ArrayList<>();
+            }
+
+            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+
+            JSONArray results = new JSONArray(response.toString());
+            List<GeoLocation> nearbyPlaces = new ArrayList<>();
+
+            for (int i = 0; i < results.length(); i++) {
+                try {
+                    JSONObject result = results.getJSONObject(i);
+
+                    if (!result.has("lat") || !result.has("lon")) {
+                        continue;
+                    }
+
+                    double lat = result.getDouble("lat");
+                    double lon = result.getDouble("lon");
+                    String displayName = result.optString("display_name", "Unknown Location");
+
+                    if (!GeoLocation.isValidCoordinates(lat, lon)) {
+                        continue;
+                    }
+
+                    GeoLocation location = new GeoLocation(lat, lon, displayName);
+
+                    // Check if location is within the actual radius (not just bounding box)
+                    double distance = centerLocation.distanceToKm(location);
+                    if (distance <= radiusKm) {
+                        nearbyPlaces.add(location);
+                        if (nearbyPlaces.size() >= limit) {
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.log(Level.WARNING, "Skipping invalid nearby place result: {0}", e.getMessage());
+                }
+            }
+
+            // Sort by distance from center
+            nearbyPlaces.sort((a, b) -> Double.compare(
+                centerLocation.distanceToKm(a),
+                centerLocation.distanceToKm(b)
+            ));
+
+            logger.log(Level.INFO, "Found {0} nearby places within {1}km",
+                      new Object[]{nearbyPlaces.size(), radiusKm});
+            return nearbyPlaces;
+
+        } catch (SocketTimeoutException e) {
+            logger.log(Level.WARNING, "Timeout while searching for nearby places: {0}", e.getMessage());
+            return new ArrayList<>();
+        } catch (ConnectException e) {
+            logger.log(Level.WARNING, "Connection failed while searching for nearby places: {0}", e.getMessage());
+            return new ArrayList<>();
+        } catch (JSONException e) {
+            logger.log(Level.WARNING, "Invalid JSON response while searching for nearby places: {0}", e.getMessage());
+            return new ArrayList<>();
+        } catch (IOException e) {
+            logger.log(Level.WARNING, "IO error during nearby places search: {0}", e.getMessage());
+            return new ArrayList<>();
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Unexpected error during nearby places search: {0}", e.getMessage());
+            return new ArrayList<>();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    logger.log(Level.WARNING, "Error closing reader: {0}", e.getMessage());
+                }
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
+    /**
+     * Filters a list of locations to only include those within a specified radius
+     * @param centerLocation The center location
+     * @param locations List of locations to filter
+     * @param radiusKm Maximum distance in kilometers
+     * @return Filtered list of locations within the radius, sorted by distance
+     * @throws IllegalArgumentException if parameters are invalid
+     */
+    public List<GeoLocation> filterLocationsByProximity(GeoLocation centerLocation, List<GeoLocation> locations, double radiusKm) {
+        if (centerLocation == null) {
+            throw new IllegalArgumentException("Center location cannot be null");
+        }
+        if (locations == null) {
+            throw new IllegalArgumentException("Locations list cannot be null");
+        }
+        if (radiusKm <= 0) {
+            throw new IllegalArgumentException("Radius must be positive");
+        }
+
+        return locations.stream()
+            .filter(location -> location != null)
+            .filter(location -> centerLocation.distanceToKm(location) <= radiusKm)
+            .sorted((a, b) -> Double.compare(
+                centerLocation.distanceToKm(a),
+                centerLocation.distanceToKm(b)
+            ))
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Finds the closest location from a list of locations
+     * @param centerLocation The reference location
+     * @param locations List of locations to search
+     * @return The closest location, or null if list is empty
+     * @throws IllegalArgumentException if parameters are invalid
+     */
+    public GeoLocation findClosestLocation(GeoLocation centerLocation, List<GeoLocation> locations) {
+        if (centerLocation == null) {
+            throw new IllegalArgumentException("Center location cannot be null");
+        }
+        if (locations == null || locations.isEmpty()) {
+            return null;
+        }
+
+        return locations.stream()
+            .filter(location -> location != null)
+            .min((a, b) -> Double.compare(
+                centerLocation.distanceToKm(a),
+                centerLocation.distanceToKm(b)
+            ))
+            .orElse(null);
+    }
+
+    /**
+     * Checks if a location is within a specified radius of a center point
+     * @param centerLocation The center location
+     * @param targetLocation The location to check
+     * @param radiusKm The radius in kilometers
+     * @return true if target location is within the radius
+     * @throws IllegalArgumentException if parameters are invalid
+     */
+    public boolean isLocationWithinRadius(GeoLocation centerLocation, GeoLocation targetLocation, double radiusKm) {
+        if (centerLocation == null) {
+            throw new IllegalArgumentException("Center location cannot be null");
+        }
+        if (targetLocation == null) {
+            throw new IllegalArgumentException("Target location cannot be null");
+        }
+        if (radiusKm <= 0) {
+            throw new IllegalArgumentException("Radius must be positive");
+        }
+
+        return centerLocation.distanceToKm(targetLocation) <= radiusKm;
     }
 }
